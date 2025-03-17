@@ -26,21 +26,21 @@ namespace DiceProbabilities
     /// <returns>A dictionary where the key is sum and value is its probability</returns>
     class DiceProbabilities
     {
-        public static Dictionary<int, Double> CalculateProbabilitiesForNumberOfDice(int numberOfDice)
+        public static Dictionary<int, Double> CalculateProbabilitiesForNumberOfDice(int numberOfDice, bool debugMode)
         {
             Dictionary<int, int> diceRollSumTally = new Dictionary<int, int>(); //Consider using an array instead of Dictionary???
             int minSumOfAllDiceRolled = numberOfDice; //Min sum of all dice rolled 1 = the total number of dice
             int maxSumOfAllDiceRolled = numberOfDice * 6; //Max sum of all dice rolled 6 = the total number of dice x 6 (Max dice value)
-            
-            Debug.WriteLine("Running the first loop");
+
+            Debug.WriteLineIf(debugMode, "Running the first loop");
             //This For Loop is setting the values for each possible rolled dice value to 0
             for (int index = minSumOfAllDiceRolled; index <= maxSumOfAllDiceRolled; index++)
             {
                 diceRollSumTally[index] = 0;
-                Debug.WriteLine($"Inside the loop rc[{index}] = {diceRollSumTally[index]}");
+                Debug.WriteLineIf(debugMode, $"Inside the loop rc[{index}] = {diceRollSumTally[index]}");
             }
 
-            Debug.WriteLine("Evaluating the next loop");
+            Debug.WriteLineIf(debugMode, "Evaluating the next loop");
             // Set an array for each dice with initial value set at 1
             int[] eachDiceValue = new int[numberOfDice];
             Array.Fill(eachDiceValue, 1);
@@ -48,7 +48,7 @@ namespace DiceProbabilities
             //for (int i = 0; i < numberOfDice; i++)
             //{
             //    d[i] = 1;
-            //    Debug.WriteLine($"Setting Dice[{i}] value - {d[i]}");
+            //    Debug.WriteLineIf(debugMode, $"Setting Dice[{i}] value - {d[i]}");
             //}
 
             bool allDiceRollsDone = false;
@@ -60,10 +60,10 @@ namespace DiceProbabilities
                 foreach (int dice in eachDiceValue)
                 {
                     diceRollSum += dice;
-                    Debug.Write($" Current dice {dice} + ");
+                    Debug.WriteIf(debugMode, $"Current dice {dice} + ");
                 }
                 diceRollSumTally[diceRollSum] += 1;
-                Debug.WriteLine("Sum = {diceRollSum}");
+                Debug.WriteLineIf(debugMode, $"Sum = {diceRollSum}");
 
                 //The code below is generating new value for each to 
                 //calculate the new rolled dice values. 
@@ -73,7 +73,7 @@ namespace DiceProbabilities
                 {
                     //Incrementing the value of the rolled dice for a specific dice 
                     eachDiceValue[index] += 1;
-                    Debug.WriteLine($"eachDiceValue[{index}] = {eachDiceValue[index]}");
+                    Debug.WriteLineIf(debugMode, $"eachDiceValue[{index}] = {eachDiceValue[index]}");
 
                     //Checking if the rolled dice value has got to max value of the dice (6)
                     if (eachDiceValue[index] <= 6)
@@ -98,7 +98,7 @@ namespace DiceProbabilities
                         {
                             //Set current dice rolled value to 1
                             eachDiceValue[index] = 1;
-                            Debug.WriteLine($"Set the current dice {index} rolled value to {eachDiceValue[index]}");
+                            Debug.WriteLineIf(debugMode, $"Set the current dice {index} rolled value to {eachDiceValue[index]}");
                         }
                     }
                     index++; //Increent the index by 1 to move to the next dice
@@ -124,11 +124,17 @@ namespace DiceProbabilities
     {
         public MainPage()
         {
+
+            bool debugMode = true; 
+            // debugMode determine the details of the messages printer to the console
+            //   false will only display the final results in the console
+            //   true will display detailed inner workings of the code to assist with debugging the code
+
             this.InitializeComponent();
 
             int numberOfDice = 3; // Change this to test different numbers of dice
 
-            Dictionary<int, double> probabilities = DiceProbabilities.CalculateProbabilitiesForNumberOfDice(numberOfDice);
+            Dictionary<int, double> probabilities = DiceProbabilities.CalculateProbabilitiesForNumberOfDice(numberOfDice, debugMode);
 
             Debug.WriteLine($"Probabilities for rolling {numberOfDice} dice:");
             foreach (var kvp in probabilities)
